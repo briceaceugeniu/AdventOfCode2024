@@ -12,28 +12,29 @@ class Program
                 throw new ArgumentException($"Input file {inputFilePath} does not exist.");
             }
         
-            var input = await File.ReadAllLinesAsync(inputFilePath);
-            var leftList = new int[input.Length];
-            var rightList = new int[input.Length];
-            var index = 0;
-            var result = 0;    
+            var inputLines = await File.ReadAllLinesAsync(inputFilePath);
+            var numbersPairs = new List<(int Left, int Right)>();
             
             // an input line looks like this: "97924   12015"
-            foreach (var line in input)
+            foreach (var line in inputLines)
             {
-                var numbers = line.Split("   ");
-                leftList[index] = int.Parse(numbers[0]);
-                rightList[index] = int.Parse(numbers[1]);
-                index++;
+                var numbers = line.Split(["   "], StringSplitOptions.RemoveEmptyEntries);
+                if (numbers.Length != 2 ||
+                    !int.TryParse(numbers[0], out int left) ||
+                    !int.TryParse(numbers[1], out int right))
+                {
+                    throw new ArgumentException($"Invalid numbers: {string.Join(", ", numbers)}"); 
+                }
+                
+                numbersPairs.Add((left, right));
             }
             
-            Array.Sort(leftList);
-            Array.Sort(rightList);
+            var sortedLeft = numbersPairs.Select(pair => pair.Left).OrderBy(x => x).ToList();
+            var sortedRight = numbersPairs.Select(pair => pair.Right).OrderBy(x => x).ToList();
 
-            for (int i = 0; i < input.Length; i++)
-            {
-                result += Math.Abs(leftList[i] - rightList[i]); 
-            }
+            var result = sortedLeft
+                .Zip(sortedRight, (left, right) => Math.Abs(left - right))
+                .Sum();
             
             Console.WriteLine(result);
         }
