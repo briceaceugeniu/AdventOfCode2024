@@ -29,14 +29,33 @@ class Program
                 numbersPairs.Add((left, right));
             }
             
+            // Part 1
             var sortedLeft = numbersPairs.Select(pair => pair.Left).OrderBy(x => x).ToList();
             var sortedRight = numbersPairs.Select(pair => pair.Right).OrderBy(x => x).ToList();
 
-            var result = sortedLeft
+            var result1 = sortedLeft
                 .Zip(sortedRight, (left, right) => Math.Abs(left - right))
                 .Sum();
             
-            Console.WriteLine(result);
+            Console.WriteLine($"Part 1: {result1}");
+            
+            // Part 2
+            var groupedRight = sortedRight
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count());
+            
+            var groupedLeft = sortedLeft
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+            var result2 = 0;
+            foreach (var group in groupedLeft)
+            {
+                var valRight = groupedRight.GetValueOrDefault(group.Key, 0);
+                result2 += group.Key * group.Value * valRight;
+            }
+
+            Console.WriteLine($"Result 2: {result2}");
         }
         catch (Exception e)
         {
