@@ -11,4 +11,14 @@ public static class ReadingPuzzleOperations
         
         return await File.ReadAllLinesAsync(fileName);
     }
+
+    public static async Task<string> GetInputTextAsync(string fileName = "input.txt")
+    {
+        if (!File.Exists(fileName))
+        {
+            throw new ArgumentException($"Input file {fileName} does not exist.");
+        }
+        
+        return await File.ReadAllTextAsync(fileName);
+    }
 }
