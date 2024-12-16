@@ -1,18 +1,13 @@
-﻿namespace Day1;
+﻿using CommonImplementations;
 
+namespace Day1;
 class Program
 {
     static async Task Main()
     {
         try
         {
-            const string inputFilePath = @"input.txt";
-            if (!File.Exists(inputFilePath))
-            {
-                throw new ArgumentException($"Input file {inputFilePath} does not exist.");
-            }
-        
-            var inputLines = await File.ReadAllLinesAsync(inputFilePath);
+            var inputLines = await ReadingPuzzleOperations.GetInputLinesAsync();
             var numbersPairs = new List<(int Left, int Right)>();
             
             // an input line looks like this: "97924   12015"
@@ -55,7 +50,7 @@ class Program
                 result2 += group.Key * group.Value * valRight;
             }
 
-            Console.WriteLine($"Result 2: {result2}");
+            Console.WriteLine($"Part 2: {result2}");
         }
         catch (Exception e)
         {
