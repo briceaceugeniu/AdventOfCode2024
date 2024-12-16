@@ -37,12 +37,12 @@ static class Program
     }
 
     private static int[] StringToIntArray(this string[] input) => input.Select(int.Parse).ToArray();
-    
-    private static bool AreNumbersIncreasing(int[] numbers)
+
+    private static bool AreNumbersMatchingCondition(int[] numbers, Func<int, int, bool> comparison)
     {
         for (int i = numbers.Length - 1; i > 0; i--)
         {
-            if (numbers[i] < numbers[i - 1] || numbers[i] == numbers[i - 1] || Math.Abs(numbers[i] - numbers[i - 1]) > 3)
+            if (!comparison(numbers[i], numbers[i - 1]) || Math.Abs(numbers[i] - numbers[i - 1]) > 3)
             {
                 return false;
             }
@@ -50,15 +50,8 @@ static class Program
         return true;
     }
     
-    private static bool AreNumbersDecreasing(int[] numbers)
-    {
-        for (int i = numbers.Length - 1; i > 0; i--)
-        {
-            if (numbers[i] > numbers[i - 1] || numbers[i] == numbers[i - 1] || Math.Abs(numbers[i] - numbers[i - 1]) > 3)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    private static bool AreNumbersIncreasing(int[] numbers) =>
+        AreNumbersMatchingCondition(numbers, (current, previous) => current > previous);
+    private static bool AreNumbersDecreasing(int[] numbers) =>
+        AreNumbersMatchingCondition(numbers, (current, previous) => current < previous);
 }
